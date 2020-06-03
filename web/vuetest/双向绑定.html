@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>双向绑定</title>
+</head>
+<body>
+<div id="app">
+    {{message}}
+    <cpn :number1="num1" :number2="num2" @num1change="num1change"></cpn>
+</div>
+<template id="cpn">
+    <div>
+        <input :value="n1" @input="n1change">
+        <h3>data:{{n1}}</h3>
+        <h3>props:{{number1}}</h3>
+        <input :value="n2">
+        <h3>data:{{n2}}</h3>
+        <h3>props:{{number2}}</h3>
+    </div>
+</template>
+<script src="../resource/js/vue.js" type="text/javascript">
+</script>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            num1:1,
+            num2:2
+        },
+        methods: {
+            num1change(value){
+                this.num1 = parseInt(value);
+            }
+        },
+        components:{
+            cpn:{
+                template:"#cpn",
+                data(){
+                    return{
+                        n1:this.number1,
+                        n2:this.number2
+                    }
+                },
+                props:{
+                    number1:Number,
+                    number2:Number
+                },
+                methods:{
+                    n1change(e){
+                        //改变子组件内的数据  n1 是子组件的 number1 是父组件的，这里改变只能改子组件的，改变父组件的，需要让父组件来改
+                        this.n1 = e.target.value;
+                        //发送请求改变父组件
+                        this.$emit("num1change",this.n1);
+                    }
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>model</title>
+</head>
+<body>
+
+<div id="app">
+<!--    v-model 双向绑定-->
+    <input type="text" v-model="message">
+    {{sex}}
+    <label for="male">
+        <input type="radio" id="male" value="male" name="sex" v-model="sex">男
+    </label>
+    <label for="female">
+        <input type="radio" id="female" value="female" name="sex" v-model="sex">女
+    </label>
+    <label for="license">
+        <input id="license" type="checkbox" v-model="isAgree">同意协议
+        <button :disabled="!isAgree"> 下一步</button>
+    </label>
+    <input  type="checkbox" v-model="hobbies" value="花">花
+    <input  type="checkbox" v-model="hobbies" value="草">草
+    <input  type="checkbox" v-model="hobbies" value="虫">虫
+    <input  type="checkbox" v-model="hobbies" value="鸟">鸟
+    <h3>{{hobbies}}</h3>
+    <select name="fruit" v-model="fruit">
+        <option value="梨子">梨子</option>
+        <option value="西瓜">西瓜</option>
+        <option value="芒果">芒果</option>
+        <option value="葡萄">葡萄</option>
+        <option value="香蕉">香蕉</option>
+    </select>
+    <h3>{{fruit}}</h3>
+    <h1>
+<!--        lazy 完成后改变数值-->
+        <input type="text" v-model.lazy="message">
+        {{message}}
+    </h1>
+</div>
+
+<script src="../resource/js/vue.js" type="text/javascript">
+</script>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            sex:'',
+            isAgree:false,
+            hobbies:[],
+            fruit:"香蕉"
+        },
+    })
+</script>
+</body>
+</html>

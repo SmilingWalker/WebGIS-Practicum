@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{message}}
+<!--    编译作用域 ，传入数据时传入的是父组件的数据  -->
+    <cpn v-if="isShow"></cpn>
+</div>
+<template id="aaa">
+    <div>
+        <h1> 这是标题</h1>
+        <span>这是内容</span>
+        <button v-if="isShow"> 按钮</button>
+    </div>
+</template>
+<!--作用域插槽，子组件内容不变，但是标签的样式需要改变-->
+<script src="../resource/js/vue.js" type="text/javascript">
+</script>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            isShow:true
+        },
+        components:{
+            cpn:{
+                template:"#aaa",
+                data(){
+                    return{
+                        isShow:false
+                    }
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

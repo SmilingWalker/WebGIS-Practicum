@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件模板分离</title>
+</head>
+<body>
+<div id="app">
+    {{message}}
+    <cpn></cpn>
+</div>
+<!-- 1  分离第一种 script标签， 类型必须是 x-template-->
+<script type="text/x-template" id="cpn_tem1">
+<div>
+    <h2> 这是标题</h2>
+    <p> 这是内容</p>
+</div>
+</script>
+
+<!-- 2 template标签-->
+<template id="cpn_tem2">
+    <div>
+        <h2> {{title}}</h2>
+        <p> 这是template内容</p>
+    </div>
+</template>
+
+<!-- 组件内部不能访问实例内的数据 也就是组件不能访问Vue   组件自身也有data属性 也有methods属性-->
+<script src="../resource/js/vue.js" type="text/javascript">
+</script>
+
+<div id="app2">
+    <h1>当前计数{{counter}}</h1>
+    <button @click="add">+</button>
+    <button @click="decrease">-</button>
+    <cpn2></cpn2>
+    <cpn2></cpn2>
+    <cpn2></cpn2>
+</div>
+<template id="app2_cpn">
+    <div>
+        <h1>当前计数:{{counter}}</h1>
+        <button @click="add">+</button>
+        <button @click="decrease">-</button>
+    </div>
+</template>
+<!-- 父子通讯 组件之间可以进行信息通讯 !!父--》字组件 props!!   !!子组件--》父 自定义事件!! -->
+<script>
+    Vue.component('cpn',{
+        template:`#cpn_tem2`,
+        data(){
+            //不能是对象类型，是一个函数，返回实例（Vue）对象内的值
+            return {
+                title:"模板标题"
+            }
+        }
+    });
+    Vue.component('cpn2',{
+        template: `#app2_cpn`,
+        data(){
+            return {
+                counter:0
+            };
+        },
+        methods:{
+            add(){
+                this.counter++;
+            },
+            decrease(){
+                this.counter--;
+            }
+        }
+    })
+    let app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+        },
+    });
+    let app2 = new Vue({
+        el: '#app2',
+        data: {
+            message: 'Hello Vue!',
+            counter:0
+        },
+        methods:{
+            add(){
+                this.counter++;
+            },
+            decrease(){
+                this.counter--;
+            }
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="WebGIS-Practicum:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/WebGIS_Practicum_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="WebGIS-Practicum/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="WebGIS-Practicum" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="postgresql-42.2.12" />
+          <element id="library" level="project" name="fastjson-1.2.68" />
+          <element id="library" level="project" name="gt-geojson-21.2" />
+          <element id="library" level="project" name="json-simple-1.1" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue新</title>
+    <style>
+        .isActive{
+            color: #00FF00;
+        }
+    </style>
+</head>
+<body>
+<div id="conter">
+    <h2>当前计数:{{counter}}</h2>
+    <button v-on:click="addCounter">+</button>
+    <button v-on:click="subsize">-</button>
+    <span v-bind:title="wos">
+        鼠标悬停几秒钟查看此处动态绑定的提示信息！
+    </span>
+</div>
+<div id="app">
+    {{message}}
+    <h2 v-html="url" v-bind:title="message"></h2>
+    <h2 v-bind:class="{isActive:isActive}">{{message}}</h2>
+    <button v-on:click="btnClick">按钮</button>
+    <ul>
+        <li v-for="(item,index) in movies" :class="{isActive:index==currentIndex}" v-on:click="setActive(index)">{{item
+            }}</li>
+    </ul>
+    <h3 :style="{fontSize:size}">{{fullname}}</h3>
+    <h1 >
+        {{fullprice}}
+    </h1>
+</div>
+<script src="../resource/js/vue.js" type="text/javascript">
+</script>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            currentIndex:0,
+            message: 'Hello Vue!',
+            url:"<a href='www.baidu.com'>百度一下</a>",
+            isActive:true,
+            isNotActive:false,
+            movies:["李白","杜甫",'白居易',"欧阳修","苏轼"],
+            size:'50px',
+            books: [
+                {id: 110, name: 'Unix编程艺术', price: 119},
+                {id: 111, name: '代码大全', price: 105},
+                {id: 112, name: '深入理解计算机原理', price: 98},
+                {id: 113, name: '现代操作系统', price: 87},
+            ]
+
+        },
+        computed:{
+          fullname:function () {
+              return this.message+this.movies[this.currentIndex];
+          },
+            fullprice:function () {
+              let price = 0;
+              for(let i=0;i<this.books.length;i++){
+                  console.log(this.books[i]);
+                  price += this.books[i].price;
+                  console.log(this.books[i].price);
+              }
+              console.log(price)
+              return parseInt(price);
+            }
+        },
+        methods: {
+            btnClick:function () {
+                this.isActive = !this.isActive;
+            },
+            setActive:function (index) {
+                //动态更改数据
+                this.currentIndex = index;
+            },
+        }
+    })
+    let counter = new Vue({
+        el:"#conter",
+        data: {
+            counter:0,
+            wos:"命名"
+        },
+        methods:{
+            addCounter:function () {
+                this.counter++
+            },
+            subsize:function () {
+                counter.counter--
+            }
+        },
+        created:function () {
+            console.log("app has been created")
+        },
+        beforeMount:function () {
+            console.log("app has been Mounted")
+        }
+    });
+
+</script>
+</body>
+</html>

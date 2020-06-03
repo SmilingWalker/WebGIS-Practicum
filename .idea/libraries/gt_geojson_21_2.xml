@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="gt-geojson-21.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/web/WEB-INF/lib/gt-geojson-21.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/WEB-INF/lib/gt-geojsondatastore-21.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/web/WEB-INF/lib/gt-geometry-21.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

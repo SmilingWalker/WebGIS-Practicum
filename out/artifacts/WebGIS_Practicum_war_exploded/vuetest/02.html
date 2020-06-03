@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{message}}
+    <h1>{{fullprice}}</h1>
+    <h1>{{fullname}}</h1>
+    <button @click="btn_2_click">按钮2</button>
+    <button @click="btn_3_click">按钮3</button>
+<!--    再调用方法时，如何手动获取浏览器得到的event对象         $event-->
+    <button @click="btn_4_click('aaa',$event)">按钮4</button>
+<!--    事件冒泡，最底层的事件会传递到上一层的元素内-->
+
+</div>
+<div id="app2" @click.once="divClick">
+    <button @click.stop="btn2Click">冒泡</button>
+    <input v-on:keyup.enter="keyClick">
+</div>
+
+<div id="app3">
+    <h2 v-if="score>50">{{score}}</h2>
+    <button @click="AddScore">加分</button>
+    <button @click="DecreseScore">减分</button>
+    <ul>
+        <li v-for="(value,key) in book">{{key}}:{{value}}</li>
+        <li v-for="(value,key,index) in book" :key="index" v-bind:hshs="value">{{index}}-{{key}}:{{value}}</li>
+    </ul>
+</div>
+<script src="../resource/js/vue.js" type="text/javascript">
+</script>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            firstName:"frank",
+            lastName:"jim",
+            books: [
+                {id: 110, name: 'Unix编程艺术', price: 119},
+                {id: 111, name: '代码大全', price: 105},
+                {id: 112, name: '深入理解计算机原理', price: 98},
+                {id: 113, name: '现代操作系统', price: 87},
+            ]
+        },
+        computed:{
+            fullprice:function () {
+                let price = 0;
+                for(let i=0;i<this.books.length;i++){
+                    console.log(this.books[i]);
+                    price += this.books[i].price;
+                    console.log(this.books[i].price);
+                }
+                console.log(price)
+                return parseInt(price);
+            },
+            fullname:{
+                get:function () {
+                    return this.firstName+" "+this.lastName;
+                }
+            }
+        },
+        methods:{
+            btn_2_click(){
+                console.log("btn_2_click");
+            },
+            btn_3_click(e){
+                console.log("btn_3_click");
+                console.log(e);
+            },
+            btn_4_click(abc,event){
+                console.log("++++++++++++",abc, event);
+            },
+
+        }
+
+    })
+    let app2 = new Vue({
+        el:'#app2',
+        data: {
+            message: "你好啊+++++++"
+        },
+        methods: {
+            divClick(){
+                console.log("divClick");
+            },
+            btn2Click(){
+                console.log("btn2Click");
+            },
+            keyClick(){
+                console.log("keyClick");
+            }
+        }
+    })
+    let app3 = new Vue({
+        el:"#app3",
+        data:{
+            score:10,
+            book:
+                {id: 110, name: 'Unix编程艺术', price: 119}
+        },
+        methods:{
+            AddScore(){
+                this.score += 10;
+            },
+            DecreseScore(){
+                this.score -= 10;
+            }
+        }
+
+
+    })
+</script>
+</body>
+</html>

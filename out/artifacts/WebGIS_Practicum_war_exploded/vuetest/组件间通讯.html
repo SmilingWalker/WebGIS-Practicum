@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件间通讯</title>
+</head>
+<body>
+<div id="app">
+    {{message}}
+<!--    数据传递  ，这里直接在使用时 进行传递-->
+    <cpn v-bind:old_books="books"></cpn>
+    <cpn2 v-bind:childInfo="child" @btn="childClick"></cpn2>
+</div>
+<template id="app2_cpn">
+    <div>
+        <h1>当前计数:{{counter}}</h1>
+        <button @click="add">+</button>
+        <button @click="decrease">-</button>
+        {{old_books}}
+    </div>
+</template>
+
+<template id="tem1">
+<!--    驼峰标记出现错误-->
+    <div>
+        <h3>{{childInfo}}</h3>
+        <button v-for="item in categories" @click="btnClick(item)">{{item.name}}</button>
+    </div>
+</template>
+<script src="../resource/js/vue.js" type="text/javascript">
+</script>
+<script>
+
+    // Vue.component('cpn2',{
+    //     template:"#tem1",
+    //     props: {
+    //         childInfo:{
+    //             type: String
+    //         }
+    //     },
+    //     data() {
+    //         return{
+    //             categories:[
+    //                 {id:'a',name:"世行"},
+    //                 {id:'b',name:"达到"},
+    //                 {id:'c',name:"阿迪王"},
+    //                 {id:'d',name:"欧文"},
+    //             ]
+    //         }
+    //     },
+    //     methods:{
+    //         btnClick(item){
+    //             console.log(item);
+    //             //传递点击事件
+    //             this.$emit('btn',item);
+    //         }
+    //     }
+    // })
+    let app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            books: [
+                {id: 110, name: 'Unix编程艺术', price: 119},
+                {id: 111, name: '代码大全', price: 105},
+                {id: 112, name: '深入理解计算机原理', price: 98},
+                {id: 113, name: '现代操作系统', price: 87},
+            ],
+            child:"从父组件传递过来的信息"
+        },
+        methods:{
+            childClick(item){
+                console.log(item.name);
+            }
+        },
+        components:{
+            //子组件 数据传递 props
+            cpn:{
+                template:`#app2_cpn`,
+                data(){
+                    return{
+                        counter:0
+                    }
+                },
+                methods:{
+                    add(){
+                        this.counter++;
+                    },
+                    decrease(){
+                        this.counter--;
+                    }
+                },
+                // props:['old_books']
+                props:{
+                    //父子通讯，子组件内添加props，绑定数据，使用
+                    //默认值是数组或者 对象是必须使用函数传递
+                    old_books:{
+                        type:Array,
+                        default:[0,1,2],
+                        required:true
+                    }
+                }
+            },
+            cpn2: {
+                template: "#tem1",
+                props: {
+                    childInfo: {
+                        type: String
+                    }
+                },
+                data() {
+                    return {
+                        categories: [
+                            {id: 'a', name: "世行"},
+                            {id: 'b', name: "达到"},
+                            {id: 'c', name: "阿迪王"},
+                            {id: 'd', name: "欧文"},
+                        ]
+                    }
+                },
+                methods: {
+                    btnClick(item) {
+                        console.log("子组件已经发送事件");
+                        //传递点击事件
+                        //发射事件，，item 作为参数传递过去即可
+                        this.$emit('btn', item);
+                        //双向绑定，只能通过 $emit 事件方式，进行绑定
+                    }
+                }
+            }
+
+        }
+    })
+</script>
+</body>
+</html>
