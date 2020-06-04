@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="resource/css/popup.css">
 <%--    element ui 引入  --%>
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="./resource/css/index.css">
 
 
     <style>
@@ -110,6 +110,47 @@
             position:fixed ;
             background-color: #1E9FFF;
         }
+        /*.register_div{*/
+        /*    position: absolute;*/
+        /*    z-index: 5;*/
+        /*    background-color: #E6E6E6;*/
+        /*    border-width: 2px;*/
+        /*    border-radius:4px;*/
+        /*}*/
+        #el_tabs_log{
+            position: absolute;
+            z-index: 5;
+            left: 35%;
+            top: 30%;
+            width: 30%;
+            height: 300px;
+            /*background-color: #E6E6E6;*/
+            border-width: 2px;
+            border-radius:4px;
+            text-align: center;
+        }
+        /* 用户头像的样式设置  */
+        .user_info_img{
+            height: 50px;
+            width: 50px;
+            border-radius: 25px;
+            object-fit:scale-down;
+            float:left;
+            margin-right: 30px;
+        }
+        .user_info{
+            font-size: 14px;
+            color: #409eff;
+            margin: 5px;
+        }
+        .box-card {
+            width: 250px;
+            z-index: 5;
+            float:right;
+            margin-left: 80%;
+            margin-top: 20px;
+            position: absolute;
+        }
     </style>
 
 </head>
@@ -171,35 +212,111 @@
         </div>
     </div>
     <div id="app">
-        <register_cpn ref="aaa"></register_cpn>
+
+<%--        <register_cpn ref="aaa"></register_cpn>--%>
+<%--        <login_tab_cpn ref="bbb">--%>
+<%--            <register_cpn ref="aaa" slot="register" ></register_cpn>--%>
+<%--            <login_cpn ref="ccc" slot="login"></login_cpn>--%>
+<%--        </login_tab_cpn>--%>
+        <user_info_card @login_click="show_login_dialog"></user_info_card>
+        <login_dig  :log_dia_visible="logDiaVisible" v-if="logDiaVisible"></login_dig>
     </div>
 <%--登录注册部分，两个标签--%>
-    <template>
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="用户管理" name="first">登录</el-tab-pane>
-            <el-tab-pane label="配置管理" name="second">注册</el-tab-pane>
+
+    <template id="log_tab" >
+        <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card"  id="el_tabs_log">
+            <el-tab-pane label="用户登录" name="login">
+                <div style="width: 100%;margin:0 auto;text-align: center">
+                    <slot name="login" ></slot>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="用户注册" name="register">
+                <div style="width: 100%;margin:0 auto;text-align: center">
+                    <slot name="register"></slot>
+                </div>
+            </el-tab-pane>
         </el-tabs>
     </template>
-<%--    登录部分--%>
+
+<%--    用户注册组件      --%>
 
     <template id="register_cpn">
-        <el-form :model="ruleForm"  ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="用户名" prop="username">
-                <el-input v-model="ruleForm.username"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="ruleForm.password"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="submitForm('a')" >提交</el-button>
-                <el-button @click="resetForm('ruleForm')">重置</el-button>
-            </el-form-item>
-        </el-form>
-
+        <div class="register_div">
+            <el-form :model="ruleForm" label-width="100px" status-icon  :rules="rules" ref="ruleForm"
+                     style="margin-right: 40px">
+                <el-form-item label="用户名" prop="username">
+                    <el-input autocomplete="off" v-model="ruleForm.username"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input autocomplete="off" type="password" v-model="ruleForm.password"></el-input>
+                </el-form-item>
+                <el-form-item label="验证密码" prop="checkPass">
+                    <el-input autocomplete="off" type="password" v-model="ruleForm.checkPass"></el-input>
+                </el-form-item>
+                <el-form-item >
+                    <el-button type="primary" @click="submitForm('ruleForm')" >提交</el-button>
+                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
     </template>
-    <div id="login_area">
-        注册部分
-    </div>
+
+<%--     用户登录组件       --%>
+
+    <template id="login_cpn">
+        <div class="register_div">
+            <el-form :model="ruleForm" label-width="100px" status-icon  :rules="rules" ref="ruleForm"
+                     style="margin-top: 50px;margin-right: 40px">
+                <el-form-item label="用户名" prop="username">
+                    <el-input autocomplete="off" v-model="ruleForm.username"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input autocomplete="off" type="password" v-model="ruleForm.password"></el-input>
+                </el-form-item>
+                <el-form-item >
+                    <el-button type="primary" @click="submitForm('ruleForm')" >登录</el-button>
+                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </template>
+<%--    用户登录弹窗设置   --%>
+    <template id="login_dia">
+        <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible"
+                width="30%"
+                :before-close="handleClose">
+            <span>这是一段信息</span>
+        <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+        </el-dialog>
+    </template>
+
+<%--     登录详细信息控制  --%>
+    <template id="user_info_card">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span style="font-size: 15px">登录信息</span>
+                <el-button style="float: right; padding: 3px 0" type="text" @click="login_btn">{{setLoginBtn()}}</el-button>
+            </div>
+            <img :src="getLoginImg()" class="user_info_img">
+<%--                展示用户头像信息 没有登录则展示一个+号--%>
+            </img>
+            <div class="user_info">
+                <div v-if="login">
+                    <div >用户名</div>
+
+                    <div style="margin-top: 10px">用户登录时间</div>
+                </div>
+                <div v-else>
+                    <div style="margin-top: 10px">当前用户未登录</div>
+                </div>
+            </div>
+        </el-card>
+    </template>
     <div id="map">
     </div>
     <script src="resource/js/ol.js"></script>
@@ -211,7 +328,7 @@
     <!-- import Vue before Element -->
     <script src="resource/js/vue.js" type="text/javascript"></script>
     <!-- import JavaScript -->
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="./resource/js/index.js"></script>
 
 
     <script type="text/javascript" >
@@ -586,90 +703,252 @@
             }
         }
     //---------------------------------------  注册登录，权限部分 ----------------------------------------------------------//
-        let app = new Vue({
-            el: '#app',
-            data: function() {
-                return { visible: false }
-            },
-            components:{
-                register_cpn:{
-                    template:"#register_cpn",
-                    data(){
-                        return{
-                            ruleForm:{
-                                name:"",
-                                password:"",
-                                username:""
-                            },
-                            rules: {
-                                pass: [
-                                    { validator: this.methods.validatePass, trigger: 'blur' }
-                                ],
-                                checkPass: [
-                                    { validator: this.methods.validatePass2, trigger: 'blur' }
-                                ],
-                                age: [
-                                    { validator: this.methods.checkAge, trigger: 'blur' }
-                                ]
-                            }
+
+
+
+        let register_cpn = Vue.extend({
+            template:"#register_cpn",
+            data(){
+                /***
+                 * 验证函数
+                 */
+                let validateUsername = (rule, value, callback) => {
+                    if (value === '') {
+                        console.log("1.用户名");
+                        callback(new Error('请输入用户名'));
+                    } else {
+                        //这里没有下面的那一环，就是因为这里不需要进行双重验证
+                        callback();
+                    }
+                };
+                let validatePass = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请输入密码'));
+                    } else {
+                        console.log("2.密码");
+                        if (this.ruleForm.checkPass !== '') {
+                            //这里为什么要验证，是要进行双重验证所以才有的    这句代码的含义，实际上就是 调用ruleform，里面的验证函数，对checkpass进行验证
+                            this.$refs.ruleForm.validateField('checkPass');
                         }
+                        callback();
+                    }
+                };
+                let validatePass2 = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请再次输入密码'));
+                    } else if (value !== this.ruleForm.password) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+                return{
+                    ruleForm:{
+                        password:"",
+                        checkPass:"",
+                        username:"",
                     },
-                    methods: {
-                        //验证信息
-                        submitForm(formName) {
-                            this.validate((valid) => {
-                                if (valid) {
-                                    alert('submit!');
-                                } else {
-                                    console.log('error submit!!');
-                                    return false;
-                                }
-                            });
-                            console.log("信息提交")
-                        },
-                        resetForm(formName) {
-                            //这里在哪？
-                            console.log("重置信息")
-                            this.$refs[formName].resetFields()
-                        },
-                        validatePass2: (rule, value, callback) => {
-                            if (value === '') {
-                                callback(new Error('请再次输入密码'));
-                            } else if (value !== this.ruleForm.pass) {
-                                callback(new Error('两次输入密码不一致!'));
-                            } else {
-                                callback();
-                            }
-                        },
-                        validatePass: (rule, value, callback) => {
-                            if (value === '') {
-                                callback(new Error('请输入密码'));
-                            } else {
-                                if (this.ruleForm.checkPass !== '') {
-                                    this.$refs.ruleForm.validateField('checkPass');
-                                }
-                                callback();
-                            }
-                        },
-                        checkAge: (rule, value, callback) => {
-                            if (!value) {
-                                return callback(new Error('年龄不能为空'));
-                            }
-                            setTimeout(() => {
-                                if (!Number.isInteger(value)) {
-                                    callback(new Error('请输入数字值'));
-                                } else {
-                                    if (value < 18) {
-                                        callback(new Error('必须年满18岁'));
-                                    } else {
-                                        callback();
-                                    }
-                                }
-                            }, 1000);
-                        }
+                    rules: {
+                        password: [
+                            { validator: validatePass, trigger: 'blur' }
+                        ],
+                        checkPass: [
+                            { validator: validatePass2, trigger: 'blur' }
+                        ],
+                        username:[
+                            { validator: validateUsername, trigger:'blur'}
+                        ]
                     }
                 }
             },
+            methods: {
+                //验证信息
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            alert('submit!');
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                    console.log("信息提交")
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields()
+                },
+            }
+        })
+
+        let login_cpn = Vue.extend({
+            template:"#login_cpn",
+            data(){
+                /***
+                 * 验证函数
+                 */
+                let validateUsername = (rule, value, callback) => {
+                    if (value === '') {
+                        console.log("1.用户名");
+                        callback(new Error('请输入用户名'));
+                    } else {
+                        //这里没有下面的那一环，就是因为这里不需要进行双重验证
+                        callback();
+                    }
+                };
+                let validatePass = (rule, value, callback) => {
+                    if (value === '') {
+                        callback(new Error('请输入密码'));
+                    } else {
+                        console.log("2.密码");
+                        if (this.ruleForm.checkPass !== '') {
+                            //这里为什么要验证，是要进行双重验证所以才有的    这句代码的含义，实际上就是 调用ruleform，里面的验证函数，对checkpass进行验证
+                            this.$refs.ruleForm.validateField('checkPass');
+                        }
+                        callback();
+                    }
+                };
+                return{
+                    ruleForm:{
+                        password:"",
+                        username:"",
+                    },
+                    rules: {
+                        password: [
+                            { validator: validatePass, trigger: 'blur' }
+                        ],
+                        username:[
+                            { validator: validateUsername, trigger:'blur'}
+                        ]
+                    }
+                }
+            },
+            methods: {
+                //验证信息
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            alert('submit!');
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                    console.log("信息提交")
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields()
+                },
+            }
+
+        })
+        let log_tab_cpn = Vue.extend({
+            template:"#log_tab",
+            data(){
+                return{
+                    activeName:"register"
+                }
+            },
+            methods:{
+                handleClick(tab, event) {
+                    console.log(tab, event);
+                }
+            }
+        })
+
+    //-------------------------------------------- 注册头像弹窗部分 ----------------------------------------------------//
+
+        let login_dig = Vue.extend({
+            template:"#login_dia",
+            data() {
+                return {
+                    dialogVisible: false         //弹窗可见性控制
+                };
+            },
+            props:{
+                //从父组件拿过来的数据，和父组件一同更新，
+                log_dia_visible:{
+                    default:false,
+                    required:true
+                }
+            },
+            methods: {
+                handleClose(done) {
+                    this.$confirm('确认关闭？')
+                        .then(_ => {
+                            done();
+                        })
+                        .catch(_ => {});
+                }
+            }
+        })
+
+        //-------------------------------------------- 用户头像 登录状态控制 ----------------------------------------------------//
+
+        let user_info_card = Vue.extend({
+            template:"#user_info_card",
+            data(){
+                return{
+                    login_message:"登录",
+                    login:false,
+                }
+            },
+            props:{
+              //从父组件拿过来的数据，和父组件一同更新，
+
+            },
+            methods:{
+                getLoginImg(){
+                    if(this.login){
+                        return "./resource/image/login_true.png"
+                    }
+                    else {
+                        return "./resource/image/login_false.png"
+                    }
+                },
+                setLoginBtn(){
+                    if(this.login){
+                        return "登出"
+                    }
+                    else{
+                        return "登录"
+                    }
+                },
+                login_btn(){
+                    //响应login的点击事件
+                    if(this.login){
+                        // 已经登录的情况下
+                        //1. 取消登录状态
+                        this.login = false;
+                        //2.向服务器发生ajax请求，告知登出，将服务端的session移除
+                    }
+                    else {
+                        //登录，响应弹窗事件，登录弹窗
+                        console.log("开启登录");
+                        this.$emit("login_click",true);
+                    }
+                }
+            }
+        })
+        //-------------------------------------------- Vue实例，放在最后 ----------------------------------------------------//
+
+        let app = new Vue({
+            el: '#app',
+            data:{
+                logDiaVisible:false
+            },
+            components:{
+                login_tab_cpn:log_tab_cpn,
+                register_cpn:register_cpn,
+                login_cpn:login_cpn,
+                user_info_card:user_info_card,
+                login_dig:login_dig
+                },
+            methods:{
+                show_login_dialog(login_info){
+                    console.log("login_click");
+                    this.logDiaVisible = login_info;
+                }
+            }
         })
 
     </script>
