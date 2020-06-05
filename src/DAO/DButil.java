@@ -244,7 +244,7 @@ public class DButil {
 
                 Date date = new Date();
                 String updateSQL = "update webgis_user set LoginTime = ? where username = ?";
-                stmt = con.prepareStatement(updateSQL);;
+                stmt = con.prepareStatement(updateSQL);
                 stmt.setTimestamp(1,new Timestamp(date.getTime()));
                 stmt.setString(2,username);
                 stmt.executeUpdate();
@@ -305,16 +305,19 @@ public class DButil {
 
         try {
             con = jdbcUtiles.getConnection();
-            String updateSQL = "insert into  webgis_user (username,password) values (?,?)";
+            String updateSQL = "insert into  webgis_user (username,password,registertime) values (?,?,?)";
             stmt = con.prepareStatement(updateSQL);;
             stmt.setString(1,username);
             stmt.setString(2,password);
+            Date date = new Date();
+            stmt.setTimestamp(3,new Timestamp(date.getTime()));
             int status = stmt.executeUpdate();
             if (status!=0){
                 System.out.println("注册新用户成功");
                 User user = new User();
                 user.setUsername(username);
                 user.setPassword(password);
+                user.setRegisterTime(date);
                 return user;
             }
             else {
@@ -338,8 +341,8 @@ public class DButil {
 //          User user = SelectUserByUserName("newuser");
 //          System.out.println(user.toJsonStr());
 //        insertNewUser("newuser","pass");
-        System.out.println(getUserInfoByUserName("newuser","pass").toString());
-
+//        System.out.println(getUserInfoByUserName("newuser","pass").toString());
+        System.out.println(insertNewUser("5555","5555").toString());
 //        Date data = new Date();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 //        Timestamp timestamp = new Timestamp(data.getTime());

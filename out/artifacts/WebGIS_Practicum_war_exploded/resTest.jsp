@@ -222,7 +222,7 @@
         :username="username" :logintime="LoginTime" @login_out_click="re_log_out"></user_info_card>
         <login_dig  v-bind:visible="logDiaVisible" @dig_close = "close_login_dialog" ref="login_dialog">
             <login_tab_cpn ref="bbb" slot="dig_content">
-                <register_cpn ref="aaa" slot="register" ></register_cpn>
+                <register_cpn ref="aaa" slot="register" @register_success="re_log_success"  ></register_cpn>
                 <login_cpn ref="ccc" slot="login" @login_success="re_log_success"></login_cpn>
             </login_tab_cpn>
         </login_dig>
@@ -254,10 +254,10 @@
                     <el-input autocomplete="off" v-model="ruleForm.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                    <el-input autocomplete="off" type="password" v-model="ruleForm.password"></el-input>
+                    <el-input autocomplete="off" type="new-password" v-model="ruleForm.password"></el-input>
                 </el-form-item>
                 <el-form-item label="验证密码" prop="checkPass">
-                    <el-input autocomplete="off" type="password" v-model="ruleForm.checkPass"></el-input>
+                    <el-input autocomplete="off" type="new-password" v-model="ruleForm.checkPass"></el-input>
                 </el-form-item>
                 <el-form-item >
                     <el-button type="primary" @click="submitForm('ruleForm')" >提交</el-button>
@@ -277,7 +277,7 @@
                     <el-input autocomplete="off" v-model="ruleForm.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                    <el-input autocomplete="off" type="password" v-model="ruleForm.password"></el-input>
+                    <el-input autocomplete="off" type="new-password" v-model="ruleForm.password"></el-input>
                 </el-form-item>
                 <el-form-item >
                     <el-button type="primary" @click="submitForm('ruleForm')" >登录</el-button>
@@ -767,7 +767,7 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            alert('submit!');
+                            this.register();
                         } else {
                             console.log('error submit!!');
                             return false;
@@ -778,6 +778,45 @@
                 resetForm(formName) {
                     this.$refs[formName].resetFields()
                 },
+                register(){
+                    //登录函数，收集信息发送ajax请求
+                    $.ajax({
+                        url:"./RegisterServlet",
+                        data:{
+                            username:this.ruleForm.username,
+                            password:this.ruleForm.password
+                        },
+                        type:"POST",
+                        dataType:"json",
+                        success:this.register_success_event
+                    })
+                },
+                showError(){
+                    this.$message({
+                        showClose: true,
+                        message: '用户名重复，注册失败',
+                        type: 'error'
+                    })
+                },
+                showSuccess(){
+                    this.$message({
+                        showClose: true,
+                        message: '用户注册成功',
+                        type: 'success'
+                    })
+                },
+                register_success_event(data){
+                    //注册事件
+                    if(data.status==200){
+                        //注册成功
+                        this.showSuccess();
+                        this.$emit("register_success",data.data)
+                    }else {
+                        this.showError();
+                        this.resetForm("ruleForm");
+                    }
+                }
+
             }
         })
 
@@ -887,7 +926,7 @@
             template:"#log_tab",
             data(){
                 return{
-                    activeName:"register"
+                    activeName:"login"
                 }
             },
             methods:{
@@ -962,7 +1001,6 @@
                     }
                 },
                 login_btn(){
-
                     console.log("响应点击事件");
                     //响应login的点击事件
                     if(this.login){

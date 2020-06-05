@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 
 public class RegisterServlet  extends HttpServlet {
     @Override
@@ -38,8 +39,9 @@ public class RegisterServlet  extends HttpServlet {
 
         if(user!=null){
             JsonResponse json = new JsonResponse(200);
-            json.addAttribute("info","用户注册成功");
-            json.addAttribute("user",user.toJsonStr());
+            json.addAttribute("info","用户登录成功");
+            json.addAttribute("username",username);
+            json.addAttribute("LoginTime",new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(user.getRegisterTime()));
             PrintWriter writer = resp.getWriter();
             writer.write(json.toString());
         }
