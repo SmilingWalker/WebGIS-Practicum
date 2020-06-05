@@ -118,25 +118,25 @@
         /*    border-radius:4px;*/
         /*}*/
         #el_tabs_log{
-            position: absolute;
-            z-index: 5;
-            left: 35%;
-            top: 30%;
-            width: 30%;
-            height: 300px;
-            /*background-color: #E6E6E6;*/
-            border-width: 2px;
-            border-radius:4px;
-            text-align: center;
+            /*position: absolute;*/
+            /*z-index: 5;*/
+            /*left: 35%;*/
+            /*top: 30%;*/
+            /*width: 30%;*/
+            /*height: 300px;*/
+            /*!*background-color: #E6E6E6;*!*/
+            /*border-width: 2px;*/
+            /*border-radius:4px;*/
+            /*text-align: center;*/
         }
         /* 用户头像的样式设置  */
         .user_info_img{
             height: 50px;
             width: 50px;
             border-radius: 25px;
-            object-fit:scale-down;
+            object-fit:fill;
             float:left;
-            margin-right: 30px;
+            margin-right: 40px;
         }
         .user_info{
             font-size: 14px;
@@ -218,8 +218,14 @@
 <%--            <register_cpn ref="aaa" slot="register" ></register_cpn>--%>
 <%--            <login_cpn ref="ccc" slot="login"></login_cpn>--%>
 <%--        </login_tab_cpn>--%>
-        <user_info_card @login_click="show_login_dialog"></user_info_card>
-        <login_dig  :log_dia_visible="logDiaVisible" v-if="logDiaVisible"></login_dig>
+        <user_info_card @login_click="show_login_dialog" :login="login"
+        :username="username" :logintime="LoginTime" @login_out_click="re_log_out"></user_info_card>
+        <login_dig  v-bind:visible="logDiaVisible" @dig_close = "close_login_dialog" ref="login_dialog">
+            <login_tab_cpn ref="bbb" slot="dig_content">
+                <register_cpn ref="aaa" slot="register" ></register_cpn>
+                <login_cpn ref="ccc" slot="login" @login_success="re_log_success"></login_cpn>
+            </login_tab_cpn>
+        </login_dig>
     </div>
 <%--登录注册部分，两个标签--%>
 
@@ -282,16 +288,12 @@
     </template>
 <%--    用户登录弹窗设置   --%>
     <template id="login_dia">
-        <el-dialog
-                title="提示"
-                :visible.sync="dialogVisible"
-                width="30%"
-                :before-close="handleClose">
-            <span>这是一段信息</span>
-        <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
+        <el-dialog width="30%" :visible.sync="dialogVisible" :before-close="handleClose" @close="closeDig">
+            <slot name="dig_content">这是一段信息</slot>
+<%--        <span slot="footer" class="dialog-footer">--%>
+<%--        <el-button @click="closeDig">取 消</el-button>--%>
+<%--        <el-button type="primary" @click="closeDig">确 定</el-button>--%>
+<%--      </span>--%>
         </el-dialog>
     </template>
 
@@ -307,9 +309,8 @@
             </img>
             <div class="user_info">
                 <div v-if="login">
-                    <div >用户名</div>
-
-                    <div style="margin-top: 10px">用户登录时间</div>
+                    <div >{{username}}</div>
+                    <div style="margin-top: 3px;color: chocolate" >{{logintime}}</div>
                 </div>
                 <div v-else>
                     <div style="margin-top: 10px">当前用户未登录</div>
@@ -827,7 +828,7 @@
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            alert('submit!');
+                            this.login(this.showError,this.showSuccess);
                         } else {
                             console.log('error submit!!');
                             return false;
@@ -838,6 +839,47 @@
                 resetForm(formName) {
                     this.$refs[formName].resetFields()
                 },
+                showError(){
+                    this.$message({
+                        showClose: true,
+                        message: '用户名或密码错误',
+                        type: 'error'
+                    })
+                },
+                showSuccess(){
+                    this.$message({
+                        showClose: true,
+                        message: '用户登录成功',
+                        type: 'success'
+                    })
+                },
+                login_success_event(data){
+                    if(data.status===200){
+                        //登录成功 弹窗
+                        this.showSuccess();
+                        //1.进行图标展示，关闭登录注册框
+                        console.log(data.data);
+                        this.$emit("login_success",data.data);
+
+                    }
+                    else {
+                        //登录失败 弹窗
+                        this.showError()
+                    }
+                },
+                login(){
+                    //登录函数，收集信息发送ajax请求
+                    $.ajax({
+                        url:"./LoginServlet",
+                        data:{
+                            username:this.ruleForm.username,
+                            password:this.ruleForm.password
+                        },
+                        type:"POST",
+                        dataType:"json",
+                        success:this.login_success_event
+                    })
+                }
             }
 
         })
@@ -861,13 +903,12 @@
             template:"#login_dia",
             data() {
                 return {
-                    dialogVisible: false         //弹窗可见性控制
+                    dialogVisible: this.visible         //弹窗可见性控制
                 };
             },
             props:{
                 //从父组件拿过来的数据，和父组件一同更新，
-                log_dia_visible:{
-                    default:false,
+                visible:{
                     required:true
                 }
             },
@@ -878,7 +919,11 @@
                             done();
                         })
                         .catch(_ => {});
-                }
+                },
+                closeDig(){
+                    this.dialogVisible = false;
+                    this.$emit("dig_close")
+                },
             }
         })
 
@@ -889,12 +934,15 @@
             data(){
                 return{
                     login_message:"登录",
-                    login:false,
                 }
             },
             props:{
               //从父组件拿过来的数据，和父组件一同更新，
-
+                login:{
+                    default:false,
+                },
+                username:String,
+                logintime:String
             },
             methods:{
                 getLoginImg(){
@@ -914,12 +962,15 @@
                     }
                 },
                 login_btn(){
+                    console.log("响应点击事件");
                     //响应login的点击事件
                     if(this.login){
+                        console.log("登出");
                         // 已经登录的情况下
                         //1. 取消登录状态
-                        this.login = false;
+                        // this.login = false; 这个需要让父组件来做
                         //2.向服务器发生ajax请求，告知登出，将服务端的session移除
+                        this.$emit("login_out_click");
                     }
                     else {
                         //登录，响应弹窗事件，登录弹窗
@@ -934,7 +985,10 @@
         let app = new Vue({
             el: '#app',
             data:{
-                logDiaVisible:false
+                logDiaVisible:false,
+                login:false,
+                username:"",
+                LoginTime:""
             },
             components:{
                 login_tab_cpn:log_tab_cpn,
@@ -945,8 +999,34 @@
                 },
             methods:{
                 show_login_dialog(login_info){
-                    console.log("login_click");
                     this.logDiaVisible = login_info;
+                    //打开对话框
+                    this.$refs.login_dialog.dialogVisible=true;
+                },
+                close_login_dialog(){
+                    console.log("关闭对话框");
+                    this.logDiaVisible = false;
+                },
+                re_log_success(user){
+                    //处理用户登录成功事件
+                    console.log("VUE接收到用户成功登录信息");
+                    //处理用户成功登录，
+                    //关闭弹窗
+                    this.dialogVisible = false;
+                    this.$refs.login_dialog.dialogVisible = false;
+                    this.login = true;
+                    this.username =user.username;
+                    this.LoginTime = user.LoginTime;
+                    console.log(this.LoginTime);
+                },
+                re_log_out(){
+                    //处理用户登录成功事件
+                    console.log("VUE接收到用户成功登出信息");
+                    //处理用户成功登录，
+                    //关闭弹窗
+                    this.login = false;
+                    this.username ="";
+                    this.LoginTime = "";
                 }
             }
         })

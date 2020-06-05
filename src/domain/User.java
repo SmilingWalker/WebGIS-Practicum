@@ -2,6 +2,9 @@ package domain;
 
 import com.alibaba.fastjson.JSONObject;
 
+import javax.xml.crypto.Data;
+import java.util.Date;
+
 public class User {
 
     //FIXME 还应该进行大致的判断
@@ -10,6 +13,10 @@ public class User {
     private String password;
     private int age;
     private int sex;
+    private Date LoginTime;
+    private Date RegisterTime;
+
+    //XXX:数据库内保存的时间数据为一个固定格式的字符串
 
     public String getUsername() {
         return username;
@@ -43,6 +50,22 @@ public class User {
         this.sex = sex;
     }
 
+    public Date getLoginTime() {
+        return LoginTime;
+    }
+
+    public void setLoginTime(Date loginTime) {
+        LoginTime = loginTime;
+    }
+
+    public Date getRegisterTime() {
+        return RegisterTime;
+    }
+
+    public void setRegisterTime(Date registerTime) {
+        RegisterTime = registerTime;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -50,6 +73,8 @@ public class User {
                 ", password='" + password + '\'' +
                 ", age=" + age +
                 ", sex=" + sex +
+                ", LoginTime=" + LoginTime +
+                ", RegisterTime=" + RegisterTime +
                 '}';
     }
 

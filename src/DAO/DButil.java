@@ -3,7 +3,10 @@ package DAO;
 import Utils.GeoJson;
 import domain.User;
 
+import javax.xml.crypto.Data;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 //增删改查等工具
@@ -229,16 +232,26 @@ public class DButil {
 
         try {
             con = jdbcUtiles.getConnection();
-            String updateSQL = "select * from webgis_user  where username = ? and password = ? ";
-            stmt = con.prepareStatement(updateSQL);;
+            String querySQL = "select * from webgis_user  where username = ? and password = ? ";
+            stmt = con.prepareStatement(querySQL);;
             stmt.setString(1,username);
             stmt.setString(2,password);
             ResultSet resultSet = stmt.executeQuery();
             if (resultSet.next()){
                 System.out.println("存在用户");
                 User user = new User();
+
+
+                Date date = new Date();
+                String updateSQL = "update webgis_user set LoginTime = ? where username = ?";
+                stmt = con.prepareStatement(updateSQL);;
+                stmt.setTimestamp(1,new Timestamp(date.getTime()));
+                stmt.setString(2,username);
+                stmt.executeUpdate();
+
                 user.setPassword(password);
                 user.setUsername(username);
+                user.setLoginTime(date);
                 return user;
             }
             else {
@@ -256,12 +269,14 @@ public class DButil {
 
         try {
             con = jdbcUtiles.getConnection();
-            String updateSQL = "select * from webgis_user  where username = ? ";
-            stmt = con.prepareStatement(updateSQL);;
+            String querySQL = "select * from webgis_user  where username = ? ";
+            stmt = con.prepareStatement(querySQL);;
             stmt.setString(1,username);
             ResultSet resultSet = stmt.executeQuery();
             if (resultSet.next()){
+                //需要对用户表进行修改，添加本次登录时间
                 System.out.println("存在用户");
+
                 User user = new User();
                 user.setUsername(resultSet.getString("username"));
                 user.setPassword(resultSet.getString("password"));
@@ -319,11 +334,19 @@ public class DButil {
 //        System.out.println(json);
 //        UpdateNameByName("武汉","武汉市");
 //        System.out.println(SelectByName("南"));
-          System.out.println(getInfoByGid(753));
-          User user = SelectUserByUserName("newuser");
-          System.out.println(user.toJsonStr());
+//          System.out.println(getInfoByGid(753));
+//          User user = SelectUserByUserName("newuser");
+//          System.out.println(user.toJsonStr());
 //        insertNewUser("newuser","pass");
         System.out.println(getUserInfoByUserName("newuser","pass").toString());
+
+//        Date data = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//        Timestamp timestamp = new Timestamp(data.getTime());
+//        //timeStamp是可以直接保存到数据库内的数据类型
+//        System.out.println(timestamp);
+//        System.out.println(dateFormat.format(data));
+
 
     }
 }

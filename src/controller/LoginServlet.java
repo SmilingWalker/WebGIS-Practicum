@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.logging.SimpleFormatter;
 
 //处理用户登录请求
 public class LoginServlet extends HttpServlet {
@@ -41,7 +43,9 @@ public class LoginServlet extends HttpServlet {
             req.getSession().setAttribute("user",user);
 
             JsonResponse json = new JsonResponse(200);
-            json.addAttribute("name","用户登录成功");
+            json.addAttribute("info","用户登录成功");
+            json.addAttribute("username",username);
+            json.addAttribute("LoginTime",new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(user.getLoginTime()));
             PrintWriter writer = resp.getWriter();
             writer.write(json.toString());
         }
