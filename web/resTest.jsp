@@ -323,8 +323,10 @@
     <script src="resource/js/ol.js"></script>
     <script type="text/javascript" src = "resource/js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src  = "resource/js/app.js"></script>
+    <script type="text/javascript" src="resource/js/openlayer_style.js"></script>
     <script type="text/javascript" src  = "resource/js/OSM_merge.js"></script>
     <script type="text/javascript" src = "resource/js/merge_pop.js"></script>
+    <script type="text/javascript" src="resource/js/highlight_feature.js"></script>
 
     <!-- import Vue before Element -->
     <script src="resource/js/vue.js" type="text/javascript"></script>
@@ -339,37 +341,6 @@
         %>
 //------------------------     Openlayers  style部分  --------------------------------------------------------------//
 
-        console.log(geojson);
-        //矢量样式
-        let fill = new ol.style.Fill({
-            color: 'rgba(255,141,155,0.6)'
-        });
-        let stroke = new ol.style.Stroke({
-            color: '#3399CC',
-            width: 1.25
-        });
-        let iconStyle =new ol.style.Icon(({
-                scale:0.05,
-                src: 'resource/image/res2_4m.png'
-        }));
-        let locateStyle = new ol.style.Icon({
-            anchor:[0.5,1],// 用图标的哪一点放到定位点上
-            // anchorOrigin:"top-right",// 锚点的起算位置
-            // anchorXUnits:"fraction",//锚点的x，y单位， fraction表示百分比
-            scale:0.15,
-            src:'resource/image/locate2.png'
-        })
-        const styleVector = new ol.style.Style({
-            stroke: stroke,
-            fill: fill,
-            // image:new ol.style.Circle({
-            //     radius: 2,
-            //     fill:new ol.style.Fill({
-            //         color: 'rgb(255,0,0)'
-            //         })
-            //     }),
-            image:locateStyle
-        })
 //---------------------------------- openlayers  图层控制部分         -----------------------------//
         var searchFeatures;
 
@@ -382,6 +353,10 @@
         });
         //加入数据
         vectorSource.addFeatures((new ol.format.GeoJSON()).readFeatures(geojson));
+
+        //初始不设置坐标点数据
+
+        vectorSource.clear(true);
         map.addLayer(vectorLayer);
 
         //配置检索结果
@@ -416,7 +391,8 @@
                 let name = features[i].properties.name;
                 let newFeature = new ol.Feature({
                     geometry: new ol.geom.Point(coordinate),  //几何信息
-                    name: name
+                    name: name,
+                    fid:features[i].properties.id
                 });
                 newFeature.setStyle(createLabelStyle(newFeature));      //设置要素样式
                 vectorSource.addFeature(newFeature);
@@ -575,8 +551,6 @@
             let pinyin = properties.pinyin;
             let intro = properties.intro;
             let image = properties.image;
-            console.log(image+"这是图片的内容");
-            console.log(image==null)
             let coordinates = feature.geometry.coordinates;
             let adcode99 = properties.adcode99;
             foreign_id = properties.id;

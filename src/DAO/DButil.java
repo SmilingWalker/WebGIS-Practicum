@@ -107,9 +107,9 @@ public class DButil {
                 //传入了数据
                 HashMap<String,Object> properties = new HashMap<>();
                 properties.put("name",com_name);
-                properties.put("pinyin",city_pinyin);
+//                properties.put("pinyin",city_pinyin);
                 properties.put("id", id);
-                properties.put("adcode99",city_code);
+//                properties.put("adcode99",city_code);
 
                 geoJson.AddFeature(geom,properties);
             }
