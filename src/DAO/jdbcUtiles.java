@@ -16,7 +16,7 @@ public class jdbcUtiles {
     // 读取数据库中的geom，转换成geojson
 
     //1.建立连接返回connect
-    public static String url ="jdbc:postgresql://127.0.0.1:5432/pgdemo1"; ;
+    public static String url ="jdbc:postgresql://http://49.235.16.31/:5432/GeoServer"; ;
     private static String username ="postgres" ;
     private static String password = "1998+cq+*";
 

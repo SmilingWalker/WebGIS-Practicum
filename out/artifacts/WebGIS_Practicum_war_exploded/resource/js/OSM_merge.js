@@ -35,6 +35,11 @@ var geojsonLayer = new ol.layer.Vector({
 })
 
 var pro = new ol.proj.Projection({
+
+    // // oepnlayers 会自动进行投影，这里只需要转换一下就行了
+    // code:'EPSG:3857',
+    // units:'m',
+
     code:'EPSG:4326',
     units:'degrees',
     axisOrientation:'neu'

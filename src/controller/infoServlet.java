@@ -23,7 +23,11 @@ public class infoServlet extends HttpServlet {
         //解决中文乱码问题
         req.setCharacterEncoding("UTF-8");
         //解决跨域问题
-        resp.setHeader("Access-Control-Allow-Origin", "*");
+//        resp.setHeader("Access-Control-Allow-Origin", "*");
+        //允许cookie
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+
         resp.setHeader("Cache-Control","no-cache");
         //接收查询的Ajax请求
         int fid =Integer.parseInt(req.getParameter("fid"));
@@ -52,7 +56,11 @@ public class infoServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         //解决跨域问题
         resp.setHeader("access-control-allow-headers","Authorization, Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, X-Requested-By, If-Modified-Since, X-File-Name, X-File-Type, Cache-Control, Origin");
-        resp.setHeader("Access-Control-Allow-Origin", "*");
+//        resp.setHeader("Access-Control-Allow-Origin", "*");
+        //允许cookie
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+
         resp.setHeader("Cache-Control","no-cache");
         resp.setContentType("application/json;charset=utf-8");
         resp.setCharacterEncoding("UTF-8");

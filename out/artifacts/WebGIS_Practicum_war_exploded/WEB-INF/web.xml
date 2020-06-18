@@ -44,4 +44,12 @@
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>DataQueryServlet</servlet-name>
+        <servlet-class>controller.DataQueryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DataQueryServlet</servlet-name>
+        <url-pattern>/DataQueryServlet</url-pattern>
+    </servlet-mapping>
 </web-app>

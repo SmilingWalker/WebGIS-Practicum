@@ -597,7 +597,7 @@
                 reader.onload=function(e){
                     //加载完毕后进行数据传递，！！这里注意，必须要在这个函数内才有数据，这个函数表示图片数据转换成功
                     content = reader.result;  //或者 e.target.result都是一样的，都是base64码
-                    console.log(content)
+                    console.log(content);
                     $.ajax({
                         url:"./UpdateInfoServlet",
                         data:{

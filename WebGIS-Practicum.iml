@@ -24,5 +24,6 @@
     <orderEntry type="library" name="fastjson-1.2.68" level="project" />
     <orderEntry type="library" name="gt-geojson-21.2" level="project" />
     <orderEntry type="library" name="json-simple-1.1" level="project" />
+    <orderEntry type="library" name="commons-io-2.5" level="project" />
   </component>
 </module>
